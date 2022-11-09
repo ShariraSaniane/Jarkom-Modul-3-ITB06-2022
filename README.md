@@ -178,6 +178,106 @@ subnet 192.217.1.0 netmask 255.255.255.0 {
 ```
 
 ## Soal 4
+Client yang melalui Switch3 mendapatkan range IP dari [prefix IP].3.10 - [prefix IP].3.30 dan [prefix IP].3.60 - [prefix IP].3.85
 
+**Langkah-langkah Pengerjaan No 4:**  
+1. Lakukan konfigurasi untuk rentang IP yang akan diberikan pada file /etc/dhcp/dhcpd.conf dengan cara menambahkan konfigurasi berikut ini:
+```
+subnet 192.217.1.0 netmask 255.255.255.0 {
+    range  192.217.1.50 192.217.1.88;
+    range  192.217.1.120 192.217.1.155;
+    option routers 192.217.1.1;
+    option broadcast-address 192.217.1.255;
+    option domain-name-servers 192.217.2.2;
+    default-lease-time 300;
+    max-lease-time 6900;
+}
+```
+Dengan begitu kita telah menentukan ip range dengan menambahkan range 192.217.1.50 192.217.1.88; pada subnet interface switch 3 yang terhubung ke fosha pada eth3.
 
+## Soal 5
+Client mendapatkan DNS dari WISE dan client dapat terhubung dengan internet melalui DNS tersebut.  
+  
+**Langkah-langkah Pengerjaan No 5:**  
+1. Untuk client mendapatkan DNS dari EniesLobby diperlukan konfigurasi pada file `/etc/dhcp/dhcpd.conf`
+2. Supaya semua client dapat terhubung internet pada EniesLobby diberikan konfigurasi pada file `/etc/bind/named.conf.options` dengan:
+```
+options {
+        directory \"/var/cache/bind\";
+        forwarders {
+                8.8.8.8;
+                8.8.8.4;
+        };
+        // dnssec-validation auto;
+        allow-query { any; };
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};
+```
+  
+**Testing**
+Dengan mengkonfigurasi DHCP server dan DHCP Relay seluruh Client yang berada pada subnet interface switch 1 dan switch 3 akan otomatis mendapatkan IP pada rentang yang telah dikonfigurasi. Untuk contohnya adalah sebagai berikut:
+  
+_SSS_  
+put image here
+inet 192.217.1.51/24
+  
+_Garden_  
+put image here
+inet 192.217.1.50/24
+  
+_Eden_  
+Put Image here
+inet 192.217.3.13/24
+  
+_NewstonCastle_  
+inet 192.217.3.12/24
+  
+_KemonoPark_  
+inet 192.217.3.10/24
+  
+Memastikan semua Client dapat terhubung ke Internet:
+_SSS_  
+_Garden_  
+_NewstonCastle_  
+_KemonoPark_  
+_Eden_  
 
+## Soal 6
+Lama waktu DHCP server meminjamkan alamat IP kepada Client yang melalui Switch1 selama 5 menit sedangkan pada client yang melalui Switch3 selama 10 menit. Dengan waktu maksimal yang dialokasikan untuk peminjaman alamat IP selama 115 menit.
+
+**Langkah-langkah Pengerjaan No 6:**
+1. Pada subnet interface switch 1 dan 3 ditambahkan konfigurasi berikut pada file `/etc/dhcp/dhcpd.conf`  
+```
+subnet 192.217.1.0 netmask 255.255.255.0 {
+    range  192.217.1.50 192.217.1.88;
+    range  192.217.1.120 192.217.1.155;
+    option routers 192.217.1.1;
+    option broadcast-address 192.217.1.255;
+    option domain-name-servers 192.217.2.2;
+    default-lease-time 300;
+    max-lease-time 6900;
+}
+
+subnet 192.217.3.0 netmask 255.255.255.0 {
+    range  192.217.3.10 192.217.3.30;
+    range  192.217.3.60 192.217.3.85;
+    option routers 192.217.3.1;
+    option broadcast-address 192.217.3.255;
+    option domain-name-servers 192.217.2.2;
+    default-lease-time 600;
+    max-lease-time 6900;
+}
+```
+
+## Soal 7
+Loid dan Franky berencana menjadikan Eden sebagai server untuk pertukaran informasi dengan alamat IP yang tetap dengan IP [prefix IP].3.13
+
+**Langkah-langkah Pengerjaan No 7:**
+1. Tambahkan konfigurasi untuk fixed address pada `/etc/dhcp/dhcpd.conf`
+```
+host Eden {
+    hardware ethernet 52:f1:e5:9d:68:fb;
+    fixed-address 192.217.3.13;
+}
+```
