@@ -297,3 +297,26 @@ host Eden {
 }
 ```
 ![Image 7.1](photos/7.1.png)
+
+## Soal 7
+Pada Proxy Server di Berlint, Loid berencana untuk mengatur bagaimana Client dapat mengakses internet. Artinya setiap client harus menggunakan Berlint sebagai HTTP & HTTPS proxy. Adapun kriteria pengaturannya adalah sebagai berikut:  
+- Client hanya dapat mengakses internet diluar (selain) hari & jam kerja (senin-jumat 08.00 - 17.00) dan hari libur (dapat mengakses 24 jam penuh)  
+  
+**Langkah-langkah Pengerjaan No 8:**  
+1. Pada Berlint sebagai proxy server, lakukan konfigurasi pada `/etc/squid/acl.conf` dengan seperti berikut:
+```
+acl AVAILABLE_WORKING time MTWHF 00:00-08:00
+acl AVAILABLE_WORKING time MTWHF 17:00-23:59
+acl AVAILABLE_WORKING time AS 00:00-23:59 
+```
+2. Lanjutkan melakukan konfigurasi pada `nano /etc/squid/squid.conf` dengan seperti berikut:
+```
+include /etc/squid/acl.conf
+http_port 8080
+http_access allow AVAILABLE_WORKING
+http_access deny all
+visible_hostname Berlint
+```
+3. Lakukan restart squid dengan menggunakan perintah: `service squid restart`  
+
+**Melakukan Testing Pada Client**
