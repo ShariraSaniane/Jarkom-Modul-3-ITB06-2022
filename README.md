@@ -319,4 +319,22 @@ visible_hostname Berlint
 ```
 3. Lakukan restart squid dengan menggunakan perintah: `service squid restart`  
 
-**Melakukan Testing Pada Client**
+**Melakukan Testing Pada Client**  
+  
+1. Lakukan perintah `export http_proxy="http://192.217.2.3:8080"` untuk menyambungkan client ke proxy.  
+  
+2. Set tanggal dengan perintah: `date --set "9 Nov 2022 11:00:00"`  
+3. Lakukan test dengan menggunakan lynx pada kedua link berikut:  
+ - `http://www.softwareqatest.com/`
+ - `https://example.com`
+![Image 8.1](photos/8.1.png)  
+![Image 8.2](photos/8.2.png)  
+Dikarenakan tanggal pada client disetting sebagai `9 Nov 2022 11:00:00` (masih di jam kerja) maka link tersebut tidak dapat diakses.
+
+4. Set tanggal dengan perintah: `date --set "12 Nov 2022 11:00:00"`  
+5. Lakukan test dengan menggunakan lynx pada kedua link berikut:  
+ - `http://www.softwareqatest.com/`
+ - `https://example.com`
+![Image 8.3](photos/8.3.png)  
+![Image 8.4](photos/8.4.png)  
+Dikarenakan tanggal pada client disetting sebagai `12 Nov 2022 11:00:00` (di luar jam kerja) maka link tersebut dapat diakses.
